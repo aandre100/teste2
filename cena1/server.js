@@ -3,6 +3,11 @@ var bodyParser = require('body-parser');
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo.js');
 var {User} = require('./models/user.js');
+var app = express();
+
+
+
+
 
 // var newTodo = new Todo({
 //   text: 'cena para fazer',
@@ -25,7 +30,7 @@ var {User} = require('./models/user.js');
 // });
 
 
-var app = express();
+
 
 app.listen(3000, ()=>{
   console.log('server runing on port 3000!!!')
