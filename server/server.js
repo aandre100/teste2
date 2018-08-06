@@ -6,7 +6,7 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
-
+const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
@@ -20,83 +20,37 @@ app.post('/todos', (req, res) => {
     res.status(400).send(e);
   });
 });
+
+app.get('/todos', (req, res) => {
+  Todo.find().then((todos) => {
+    res.send({todos});
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
+
 app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
   if(!ObjectID.isValid(id)) {
-    return res.status(404).send('Invalid ID')
+    return res.status(404).send()
   }
-  Todo.findById(id).then((todos) => {
-    if(!todos){
-    res.send('No todos found')
+  Todo.findById(id).then((todo) => {
+    if(!todo){
+    res.status(404).send();
   }
-     res.send({todos})
-  }, (e) => {
-    res.send('unable to fetch todos')
+     res.send({todo})
   }).catch((e) => {
     res.status(400).send();
   });
-})
+});
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.get('/todos/:id', (req, res) => {
-//   var id = req.params.id
-//    if (!ObjectID.isValid(id)){
-//      return res.status(404).send();
-//    }
-//    Todo.findById(id).then((todo) => {
-//      res.send(JSON.stringify(todo, undefined, 2))
-//    }, (e) => {
-//      res.status(404).send()
-//    });
-  //Valid id using isValid
-     //404 - send back empty send
- //findById
-    //success
-      //if todo - send it brack
-      //if no todo - send back 404 with empty body
-    //error
-    //400 - and send empty body back
-
-
-
-//})
-
-// app.get('/todos', (req, res) => {
-//   Todo.find().then((todos) => {
-//     res.send({todos})
-//   }, (err) => {
-//     res.status(400).send(e);
-//   })
-// })
-
-
-
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+app.listen(port, () => {
+  console.log(`Started on port ${port}`);
 });
 
 module.exports = {app};
